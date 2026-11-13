@@ -1,0 +1,23 @@
+<div id="guidelines-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="guidelines-title">
+  <div class="modal-card guidelines-card">
+    <div class="modal-head">
+      <div>
+        <h2 id="guidelines-title">Community guidelines</h2>
+        <p>Version {{ guidelines_version }} &middot; Nexora AI</p>
+      </div>
+      <button class="icon-btn" type="button" data-close-modal="guidelines-modal" aria-label="Close"><span class="i" data-icon="x"></span></button>
+    </div>
+    <div class="guidelines-body">
+      {% for section in guidelines %}
+      <section>
+        <h3>{{ loop.index }}. {{ section.title }}</h3>
+        <p>{{ section.body }}</p>
+      </section>
+      {% endfor %}
+    </div>
+    <div class="guidelines-foot">
+      <p>By continuing to use Nexora AI you agree to these guidelines. We may update them as the service evolves.</p>
+      <button class="primary-btn" id="guidelines-accept" type="button">I understand</button>
+    </div>
+  </div>
+</div>

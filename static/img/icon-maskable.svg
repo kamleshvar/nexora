@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="nexoraMaskTitle">
+  <title id="nexoraMaskTitle">Nexora AI</title>
+  <defs>
+    <linearGradient id="bg" x1="6" y1="4" x2="58" y2="60" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#a28cff"/>
+      <stop offset=".52" stop-color="#6d7cff"/>
+      <stop offset="1" stop-color="#35c8d6"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" fill="url(#bg)"/>
+  <g transform="translate(7.2 7.2) scale(.775)">
+    <rect width="64" height="64" rx="13" fill="#0b1220" fill-opacity=".14"/>
+    <path d="M19 45V19l26 26V19" fill="none" stroke="#ffffff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="46.5" cy="14.5" r="3.2" fill="#e6feff"/>
+  </g>
+</svg>

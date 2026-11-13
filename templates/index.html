@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#090d18">
+  <meta name="description" content="Nexora AI — a fast, private AI workspace.">
+  <title>Nexora AI</title>
+  <link rel="manifest" href="{{ url_for('static', filename='manifest.webmanifest') }}">
+  <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}" sizes="any">
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon-32.png') }}">
+  <link rel="apple-touch-icon" href="{{ url_for('static', filename='img/apple-touch-icon.png') }}">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Nexora">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=33">
+</head>
+<body class="app-page">
+  <noscript><div class="noscript">Nexora needs JavaScript enabled to chat. Please enable it or use a modern browser.</div></noscript>
+  <div class="ambient ambient-a"></div>
+  <div class="ambient ambient-b"></div>
+
+  <div class="app-shell">
+    <aside id="sidebar" class="sidebar" aria-label="Conversations">
+      <div class="sidebar-head">
+        <a class="brand brand-link" href="{{ url_for('home') }}">
+          <img src="{{ url_for('static', filename='img/logo-mark.png') }}" alt="" class="brand-logo" width="38" height="38">
+          <span><b>NEXORA</b><small>INTELLIGENCE</small></span>
+        </a>
+        <button id="sidebar-close" class="icon-btn sidebar-close" type="button" aria-label="Close sidebar"><span class="i" data-icon="x"></span></button>
+      </div>
+
+      <button id="new-chat" class="new-chat" type="button"><span class="i" data-icon="plus"></span> New conversation</button>
+
+      <label class="search-box" for="conversation-search">
+        <span class="i" data-icon="search"></span>
+        <input id="conversation-search" type="search" placeholder="Search conversations" autocomplete="off">
+      </label>
+
+      <div class="side-label">CONVERSATIONS</div>
+      <nav id="conversation-list" class="conversation-list" aria-live="polite"></nav>
+
+      <div class="sidebar-bottom">
+        <button id="trash-open" class="side-action" type="button"><span class="i" data-icon="trash"></span> Recently deleted</button>
+        <button class="side-action" type="button" data-open-guidelines><span class="i" data-icon="shield"></span> Community guidelines</button>
+        <button id="settings-open" class="side-action" type="button"><span class="i" data-icon="settings"></span> Settings</button>
+        <div class="user-chip">
+          <span id="sidebar-avatar" class="avatar avatar-user" aria-hidden="true">?</span>
+          <span class="user-chip-text">
+            <b id="sidebar-name">{{ user.display_name }}</b>
+            <small>@{{ user.username }}</small>
+          </span>
+          <button id="logout" class="icon-btn" type="button" title="Sign out" aria-label="Sign out"><span class="i" data-icon="power"></span></button>
+        </div>
+      </div>
+    </aside>
+    <div id="sidebar-scrim" class="sidebar-scrim hidden"></div>
+
+    <main class="main">
+      <header class="topbar">
+        <button id="mobile-menu" class="icon-btn" type="button" aria-label="Open conversations"><span class="i" data-icon="menu"></span></button>
+        <div class="model-label">
+          <span class="live-dot"></span>
+          <span id="model-label">{{ models[default_model] }}</span>
+          <small>· NVIDIA</small>
+        </div>
+        <div class="topbar-actions">
+          <span id="credit-chip" class="credit-chip hidden" title="Your 6-hour token credits">—</span>
+          <button id="export-chat" class="icon-btn" type="button" title="Export conversation" aria-label="Export conversation"><span class="i" data-icon="download"></span></button>
+          <button id="settings-top" class="icon-btn" type="button" title="Settings" aria-label="Settings"><span class="i" data-icon="settings"></span></button>
+        </div>
+      </header>
+
+      <section id="chat" class="chat-area">
+        <div id="welcome" class="welcome">
+          <div class="orb"><img src="{{ url_for('static', filename='img/logo-mark.png') }}" alt="" width="76" height="76"></div>
+          <div class="eyebrow">YOUR AI WORKSPACE</div>
+          <h1>Think freely.<br><span>Build boldly.</span></h1>
+          <p>Chat, research, read documents, create images and download polished files — all in one place.</p>
+          <div class="suggestions">
+            <button class="suggestion" type="button" data-prompt="Help me brainstorm a unique software product idea."><b class="i" data-icon="lightbulb"></b><span><strong>Brainstorm ideas</strong><small>Turn a rough thought into a plan</small></span><span class="i" data-icon="arrow-up-right"></span></button>
+            <button class="suggestion" type="button" data-prompt="Search the web for the latest AI model releases and summarise them with sources."><b class="i" data-icon="search"></b><span><strong>Research the web</strong><small>Current facts with citations</small></span><span class="i" data-icon="arrow-up-right"></span></button>
+            <button class="suggestion" type="button" data-prompt="Create a business plan PDF for a small coffee shop."><b class="i" data-icon="file-text"></b><span><strong>Create a document</strong><small>PDF, DOCX, CSV or XLSX</small></span><span class="i" data-icon="arrow-up-right"></span></button>
+          </div>
+        </div>
+        <div id="messages" class="messages" aria-live="polite"></div>
+        <div id="chat-ads" class="chat-ads hidden" aria-label="More from TechOrigin"></div>
+      </section>
+
+      <button id="scroll-bottom" class="scroll-bottom hidden" type="button" aria-label="Scroll to newest message"><span class="i" data-icon="chevron-down"></span></button>
+
+      <footer class="composer-wrap">
+        <form id="chat-form" class="composer">
+          <div id="attachment-tray" class="attachment-tray hidden" aria-live="polite"></div>
+          <textarea id="message-input" rows="1" placeholder="Ask Nexora anything…" autocomplete="off" aria-label="Message"></textarea>
+          <div class="composer-tools">
+            <div class="tool-group">
+              <button id="attach-btn" class="tool-btn" type="button" title="Attach a document" aria-label="Attach a document"><span class="i" data-icon="paperclip"></span><span class="tool-label">Attach</span></button>
+              <input id="file-input" type="file" accept=".pdf,.docx,.txt,.md,.csv,.json,.xlsx" multiple hidden>
+              <button id="web-toggle" class="tool-btn" type="button" title="Search the web" aria-pressed="false"><span class="i" data-icon="globe"></span><span class="tool-label">Web</span></button>
+              <button id="image-toggle" class="tool-btn" type="button" title="Generate an image" aria-pressed="false"><span class="i" data-icon="image"></span><span class="tool-label">Image</span></button>
+              <select id="aspect-ratio" class="aspect-select hidden" aria-label="Image shape">
+                <option value="1:1">Square</option>
+                <option value="16:9">Landscape</option>
+                <option value="9:16">Portrait</option>
+              </select>
+            </div>
+            <div class="composer-buttons">
+              <button id="stop-btn" class="send-btn stop-btn hidden" type="button" aria-label="Stop generating"><span class="i" data-icon="stop"></span></button>
+              <button id="send-btn" class="send-btn" type="submit" aria-label="Send message"><span class="i" data-icon="arrow-up"></span></button>
+            </div>
+          </div>
+          <div class="composer-hint">
+            <span>Enter to send · Shift + Enter for a new line</span>
+            <span id="composer-status" class="composer-status" role="status" aria-live="polite"></span>
+          </div>
+        </form>
+        <div class="disclaimer">Nexora can make mistakes. Verify important information. <button type="button" class="link-btn" data-open-guidelines>Guidelines</button></div>
+      </footer>
+    </main>
+  </div>
+
+  <!-- Settings -->
+  <div id="settings-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+    <div class="modal-card settings-card">
+      <div class="modal-head">
+        <div><h2 id="settings-title">Settings</h2><p>Profile, preferences and credits.</p></div>
+        <button class="icon-btn" type="button" data-close-modal="settings-modal" aria-label="Close"><span class="i" data-icon="x"></span></button>
+      </div>
+      <div class="settings-tabs" role="tablist">
+        <button class="settings-tab active" type="button" data-settings-tab="profile">Profile</button>
+        <button class="settings-tab" type="button" data-settings-tab="preferences">Preferences</button>
+        <button class="settings-tab" type="button" data-settings-tab="guidelines">Guidelines</button>
+        <button class="settings-tab" type="button" data-settings-tab="developer">Developer</button>
+      </div>
+
+      <div class="settings-panel" data-settings-panel="profile">
+        <div class="profile-head">
+          <span id="profile-avatar" class="avatar avatar-xl avatar-user">?</span>
+          <div>
+            <h3 id="profile-name">{{ user.display_name }}</h3>
+            <p>@{{ user.username }} · Member since <span id="profile-joined"></span></p>
+            <label class="upload-btn" for="avatar-input">Upload profile photo</label>
+            <input id="avatar-input" type="file" accept="image/png,image/jpeg,image/webp,image/gif" hidden>
+            <div id="avatar-status" class="setting-note hidden"></div>
+          </div>
+        </div>
+        <div class="credit-card">
+          <div class="credit-card-head"><span>6-hour token credits</span><b id="credit-summary">—</b></div>
+          <div class="credit-track"><span id="credit-bar" class="credit-bar"></span></div>
+          <small id="credit-note">Rolling 6-hour window · refills automatically.</small>
+        </div>
+        <div class="plan-card">
+          <div class="plan-head"><span>Current plan</span><b id="plan-badge">{{ user.plan or 'standard' }}</b></div>
+          <small id="plan-note" class="setting-note">Standard plan: 100k tokens / 6h · Nemotron 3.5 models</small>
+          <button id="god-request-btn" class="primary-btn" type="button" style="margin-top:10px;display:none;">Request God Mode</button>
+        </div>
+        <form id="profile-form" class="settings-form">
+          <label class="field"><span>Display name</span><input id="profile-display-name" type="text" maxlength="50" value="{{ user.display_name }}"></label>
+          <label class="field"><span>Preferred name <em>· what Nexora calls you</em></span><input id="profile-nickname" type="text" maxlength="40" value="{{ user.nickname or '' }}" placeholder="e.g. Kam, Sam, Captain"></label>
+          <p class="field-note">Used naturally, at most once per reply. Nexora never invents pet names or assumes your gender.</p>
+          <button class="primary-btn" type="submit">Save profile</button>
+        </form>
+        <hr class="divider">
+        <h3 class="settings-subtitle">Change password</h3>
+        <form id="password-form" class="settings-form">
+          <label class="field"><span>Current password</span><input id="current-password" type="password" autocomplete="current-password"></label>
+          <label class="field"><span>New password</span><input id="new-password" type="password" autocomplete="new-password" minlength="8"></label>
+          <div id="password-status" class="error-text" role="alert"></div>
+          <button class="secondary-btn" type="submit">Update password</button>
+        </form>
+      </div>
+
+      <div class="settings-panel hidden" data-settings-panel="preferences">
+        <label class="field"><span>Model</span>
+          <select id="model-select">
+            {% for model_id, model_name in models.items() %}
+            <option value="{{ model_id }}" {% if model_id == default_model %}selected{% endif %}>{{ model_name }}</option>
+            {% endfor %}
+          </select>
+        </label>
+        <label class="field"><span>Creativity <output id="temp-value">0.7</output></span>
+          <input id="temperature" type="range" min="0" max="1" step="0.05" value="0.7">
+        </label>
+        <label class="field"><span>Maximum response tokens</span>
+          <select id="max-tokens">
+            <option value="1024">1,024</option>
+            <option value="2048">2,048</option>
+            <option value="4096" selected>4,096</option>
+            <option value="8192">8,192</option>
+          </select>
+        </label>
+        <div class="setting-note">Preferences sync to your Nexora account, so the web app and installed app stay together. Model availability depends on your NVIDIA API account.</div>
+        <button id="preferences-save" class="primary-btn" type="button">Save preferences</button>
+      </div>
+
+      <div class="settings-panel hidden" data-settings-panel="guidelines">
+        <p class="settings-copy">Nexora is designed to be useful without being harmful. The community guidelines explain what is welcome, what is not, and how enforcement works.</p>
+        <button class="secondary-btn" type="button" data-open-guidelines>Read community guidelines</button>
+      </div>
+
+      <div class="settings-panel hidden" data-settings-panel="developer">
+        <div class="dev-card">
+          <img src="{{ url_for('static', filename='img/logo-full.png') }}" alt="Nexora AI" width="72" height="72">
+          <div>
+            <h3>Nexora AI</h3>
+            <p class="settings-copy">A lightweight AI workspace built for every screen.</p>
+          </div>
+        </div>
+        <div class="dev-links">
+          <a href="https://techorigin.online" target="_blank" rel="noopener"><b>techorigin.online</b><span>Product &amp; engineering</span></a>
+          <a href="https://kamleshvar.online" target="_blank" rel="noopener"><b>kamleshvar.online</b><span>Kamleshvar · Admin &amp; Developer</span></a>
+        </div>
+        <div class="setting-note">Version {{ guidelines_version }} · Community guidelines included. Built with Flask, NVIDIA Nemotron and a lot of care.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Trash -->
+  <div id="trash-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="trash-title">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div><h2 id="trash-title">Recently deleted</h2><p>Restore a chat or delete it forever. Permanent deletion cannot be undone.</p></div>
+        <button class="icon-btn" type="button" data-close-modal="trash-modal" aria-label="Close"><span class="i" data-icon="x"></span></button>
+      </div>
+      <div id="trash-list" class="trash-list"></div>
+    </div>
+  </div>
+
+  {% include "_guidelines.html" %}
+
+  <!-- Confirm dialog -->
+  <div id="confirm-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+    <div class="modal-card confirm-card">
+      <h2 id="confirm-title">Are you sure?</h2>
+      <p id="confirm-text"></p>
+      <div class="confirm-actions">
+        <button id="confirm-cancel" class="secondary-btn" type="button">Cancel</button>
+        <button id="confirm-ok" class="danger-btn" type="button">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+  <script>
+    window.NEXORA = {
+      user: {{ user|tojson }},
+      models: {{ models|tojson }},
+      defaultModel: {{ default_model|tojson }},
+      guidelinesVersion: {{ guidelines_version|tojson }}
+    };
+  </script>
+  <script src="{{ url_for('static', filename='js/common.js') }}?v=33"></script>
+  <script src="{{ url_for('static', filename='js/app.js') }}?v=33"></script>
+</body>
+</html>

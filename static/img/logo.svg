@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="nexoraLogoTitle">
+  <title id="nexoraLogoTitle">Nexora AI</title>
+  <defs>
+    <linearGradient id="bg" x1="6" y1="4" x2="58" y2="60" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#a28cff"/>
+      <stop offset=".52" stop-color="#6d7cff"/>
+      <stop offset="1" stop-color="#35c8d6"/>
+    </linearGradient>
+    <linearGradient id="sheen" x1="10" y1="6" x2="44" y2="48" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffffff" stop-opacity=".32"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="url(#bg)"/>
+  <rect x="1.25" y="1.25" width="61.5" height="61.5" rx="14.75" fill="none" stroke="#ffffff" stroke-opacity=".2" stroke-width="1.5"/>
+  <path d="M19 45V19l26 26V19" fill="none" stroke="#ffffff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="46.5" cy="14.5" r="3.2" fill="#e6feff"/>
+  <circle cx="46.5" cy="14.5" r="6" fill="none" stroke="#e6feff" stroke-opacity=".35" stroke-width="1.2"/>
+  <path d="M0 16C0 7.163 7.163 0 16 0h32c8.837 0 16 7.163 16 16v10C46 12 20 10 0 22Z" fill="url(#sheen)"/>
+</svg>

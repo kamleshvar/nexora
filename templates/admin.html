@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#090d18">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Admin console · Nexora AI</title>
+  <link rel="manifest" href="{{ url_for('static', filename='manifest.webmanifest') }}">
+  <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}" sizes="any">
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon-32.png') }}">
+  <link rel="apple-touch-icon" href="{{ url_for('static', filename='img/apple-touch-icon.png') }}">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=33">
+</head>
+<body class="admin-page">
+  <div class="ambient ambient-a"></div>
+  <div class="ambient ambient-b"></div>
+
+  <!-- Admin login -->
+  <div id="admin-login" class="admin-login">
+    <form id="admin-login-form" class="admin-login-card">
+      <img src="{{ url_for('static', filename='img/logo-mark.png') }}" alt="Nexora AI" width="60" height="60">
+      <div class="eyebrow">NEXORA CONTROL</div>
+      <h1>Admin portal</h1>
+      <p>Enter the administrator password to review conversations and manage the workspace.</p>
+      <label class="field"><span>Administrator password</span>
+        <input id="admin-password" type="password" autocomplete="current-password" placeholder="Password" required autofocus>
+      </label>
+      <div id="admin-login-error" class="error-text" role="alert"></div>
+      <button class="primary-btn" type="submit">Unlock admin console</button>
+      <div class="admin-login-links">
+        <a href="{{ url_for('login_page') }}"><span class="i" data-icon="arrow-left"></span> Back to Nexora</a>
+        <button type="button" class="link-btn" data-open-guidelines>Community guidelines</button>
+      </div>
+      <p class="auth-dev">Developed by <a href="https://techorigin.online" target="_blank" rel="noopener">techorigin.online</a> · <a href="https://kamleshvar.online" target="_blank" rel="noopener">kamleshvar.online</a></p>
+    </form>
+  </div>
+
+  <!-- Admin console -->
+  <div id="admin-app" class="admin-shell hidden">
+    <aside id="admin-sidebar" class="admin-sidebar">
+      <div class="sidebar-head">
+        <a class="brand brand-link" href="{{ url_for('admin_page') }}">
+          <img src="{{ url_for('static', filename='img/logo-mark.png') }}" alt="" class="brand-logo" width="38" height="38">
+          <span><b>NEXORA</b><small>CONTROL</small></span>
+        </a>
+        <button id="admin-sidebar-close" class="icon-btn" type="button" aria-label="Close menu"><span class="i" data-icon="x"></span></button>
+      </div>
+      <div class="admin-badge-block"><span class="admin-dot"></span> Administrator session</div>
+      <nav class="admin-nav">
+        <button class="admin-nav-item active" type="button" data-admin-view="chats"><span class="i" data-icon="message"></span> All chats</button>
+        <button class="admin-nav-item" type="button" data-admin-view="users"><span class="i" data-icon="users"></span> Users</button>
+        <button class="admin-nav-item" type="button" data-admin-view="deleted-users"><span class="i" data-icon="trash"></span> Deleted Users</button>
+        <button class="admin-nav-item" type="button" data-admin-view="god-requests"><span class="i" data-icon="sparkles"></span> God requests</button>
+        <button class="admin-nav-item" type="button" data-admin-view="ads"><span class="i" data-icon="megaphone"></span> Advertisements</button>
+        <button class="admin-nav-item" type="button" data-admin-view="ai"><span class="i" data-icon="star"></span> Admin AI chat</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <button class="side-action" type="button" data-open-guidelines><span class="i" data-icon="shield"></span> Community guidelines</button>
+        <button id="admin-settings-open" class="side-action" type="button"><span class="i" data-icon="settings"></span> Settings &amp; credits</button>
+        <button id="admin-logout" class="side-action" type="button"><span class="i" data-icon="power"></span> Sign out</button>
+        <div class="admin-dev">techorigin.online<br>kamleshvar.online</div>
+      </div>
+    </aside>
+    <div id="admin-scrim" class="sidebar-scrim hidden"></div>
+
+    <main class="admin-main">
+      <header class="admin-topbar">
+        <button id="admin-menu" class="icon-btn" type="button" aria-label="Open menu"><span class="i" data-icon="menu"></span></button>
+        <div class="admin-title-wrap">
+          <h1 id="admin-title">All chats</h1>
+          <p id="admin-subtitle">Every conversation, including deleted ones.</p>
+        </div>
+        <div class="admin-topbar-right">
+          <span class="admin-pill">ADMIN</span>
+          <div class="profile-menu-wrap" id="admin-profile-menu-wrap">
+            <button id="admin-profile-button" class="profile-menu-button" type="button" aria-haspopup="true" aria-expanded="false" title="Administrator account">
+              <span id="admin-profile-avatar" class="avatar avatar-user">A</span>
+            </button>
+            <div id="admin-profile-dropdown" class="profile-dropdown hidden" role="menu">
+              <div class="profile-dropdown-head">
+                <span id="admin-dropdown-avatar" class="avatar avatar-user">A</span>
+                <div><b id="admin-dropdown-name">Administrator</b><small>@admin · Administrator</small></div>
+              </div>
+              <button type="button" class="profile-dropdown-item" data-profile-action="profile"><span class="i" data-icon="user"></span> My Profile</button>
+              <button type="button" class="profile-dropdown-item" data-profile-action="settings"><span class="i" data-icon="settings"></span> Account Settings</button>
+              <button type="button" class="profile-dropdown-item" data-profile-action="security"><span class="i" data-icon="shield"></span> Security</button>
+              <button type="button" class="profile-dropdown-item" data-profile-action="signout"><span class="i" data-icon="power"></span> Sign Out</button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <section id="view-chats" class="admin-view">
+        <div class="stat-grid">
+          <div class="stat-card"><span>Users</span><b id="stat-users">–</b></div>
+          <div class="stat-card"><span>Conversations</span><b id="stat-conversations">–</b></div>
+          <div class="stat-card"><span>Deleted chats</span><b id="stat-deleted">–</b></div>
+          <div class="stat-card"><span>Messages</span><b id="stat-messages">–</b></div>
+        </div>
+        <div class="admin-toolbar">
+          <label class="search-box" for="admin-search"><span class="i" data-icon="search"></span><input id="admin-search" type="search" placeholder="Search title or user" autocomplete="off"></label>
+          <select id="admin-user-filter" aria-label="Filter by user"><option value="">All users</option></select>
+          <label class="check-field"><input id="admin-include-deleted" type="checkbox" checked> Include deleted</label>
+          <button id="admin-refresh" class="secondary-btn compact" type="button">Refresh</button>
+          <button id="admin-delete-all" class="danger-btn compact" type="button">Delete All Chats</button>
+        </div>
+        <div id="admin-chat-list" class="admin-chat-list" aria-live="polite"></div>
+      </section>
+
+      <section id="view-users" class="admin-view hidden">
+        <div class="admin-toolbar">
+          <div class="admin-section-copy">
+            <b>Active Users</b>
+            <span>Manage active accounts, credits, and restrictions.</span>
+          </div>
+        </div>
+        <div id="admin-users-list" class="admin-users-list" aria-live="polite"></div>
+      </section>
+
+      <section id="view-deleted-users" class="admin-view hidden">
+        <div class="admin-toolbar">
+          <div class="admin-section-copy">
+            <b>Deleted Users</b>
+            <span>Manage soft-deleted accounts. Restore or permanently delete.</span>
+          </div>
+          <div class="admin-toolbar-actions">
+            <label class="search-box" for="deleted-search"><span class="i" data-icon="search"></span><input id="deleted-search" type="search" placeholder="Search username or name" autocomplete="off"></label>
+            <input id="deleted-date-from" type="date" placeholder="From" aria-label="Deletion date from">
+            <input id="deleted-date-to" type="date" placeholder="To" aria-label="Deletion date to">
+            <select id="deleted-sort" aria-label="Sort by">
+              <option value="newest">Newest first</option>
+              <option value="oldest">Oldest first</option>
+              <option value="username">Username A-Z</option>
+            </select>
+          </div>
+        </div>
+        <!-- Deleted Users Statistics Cards -->
+<div class="deleted-stats-overflow">
+  <div class="deleted-stat-card" id="stat-deleted-total">
+    <span class="deleted-stat-icon"><span class="i" data-icon="trash-2"></span></span>
+    <div class="deleted-stat-value" id="stat-value-total">0</div>
+    <div class="deleted-stat-label">Total Deleted</div>
+  </div>
+  <div class="deleted-stat-card" id="stat-deleted-7d">
+    <span class="deleted-stat-icon"><span class="i" data-icon="calendar-days"></span></span>
+    <div class="deleted-stat-value" id="stat-value-7d">0</div>
+    <div class="deleted-stat-label">Last 7 Days</div>
+  </div>
+  <div class="deleted-stat-card" id="stat-deleted-30d">
+    <span class="deleted-stat-icon"><span class="i" data-icon="chart-no-axes-combined"></span></span>
+    <div class="deleted-stat-value" id="stat-value-30d">0</div>
+    <div class="deleted-stat-label">Last 30 Days</div>
+  </div>
+</div>
+        <div id="admin-deleted-users-list" class="admin-users-list" aria-live="polite"></div>
+        <div class="admin-pagination" id="deleted-pagination"></div>
+      </section>
+
+      <section id="view-god-requests" class="admin-view hidden">
+        <div class="admin-toolbar">
+          <div class="admin-section-copy">
+            <b>God mode requests</b>
+            <span>Users requesting God mode (Nemotron 3 Ultra, 500k tokens/12h). Approve or reject each request.</span>
+          </div>
+        </div>
+        <div id="admin-god-requests-list" class="admin-god-requests-list" aria-live="polite"></div>
+      </section>
+
+      <section id="view-ads" class="admin-view hidden">
+        <div class="admin-toolbar">
+          <div class="admin-section-copy">
+            <b>End-of-chat advertisements</b>
+            <span>These cards appear at the end of conversations. They stay hidden until a chat has messages.</span>
+          </div>
+          <label class="check-field ad-global-toggle"><input id="ads-enabled" type="checkbox" checked> Show ads globally</label>
+          <button id="admin-ad-new" class="primary-btn compact" type="button"><span class="i" data-icon="plus"></span> New advertisement</button>
+        </div>
+        <div id="admin-ads-list" class="admin-ads-list" aria-live="polite"></div>
+      </section>
+
+      <section id="view-ai" class="admin-view admin-ai-view hidden">
+        <div class="admin-ai-shell">
+          <div class="admin-ai-side">
+            <button id="admin-new-chat" class="new-chat" type="button"><span class="i" data-icon="plus"></span> New chat</button>
+            <div class="side-label">ADMIN CHATS</div>
+            <label class="search-box ai-search" for="admin-ai-search"><span class="i" data-icon="search"></span>
+              <input id="admin-ai-search" type="search" placeholder="Search chats" autocomplete="off">
+            </label>
+            <div id="admin-ai-conversations" class="conversation-list" aria-live="polite"></div>
+            <div class="side-label">CHAT MANAGEMENT</div>
+            <button class="side-action" type="button" data-ai-panel="archived"><span class="i" data-icon="archive"></span> Archived Chats <span class="count-badge" id="ai-archived-count">0</span></button>
+            <button class="side-action" type="button" data-ai-panel="deleted"><span class="i" data-icon="trash"></span> Deleted Chats <span class="count-badge" id="ai-deleted-count">0</span></button>
+            <div class="side-label">ACCOUNT</div>
+            <button class="side-action" type="button" data-profile-action="profile"><span class="i" data-icon="user"></span> My Profile</button>
+            <button class="side-action" type="button" id="admin-ai-settings"><span class="i" data-icon="settings"></span> Settings</button>
+          </div>
+          <div class="admin-ai-main">
+            <header class="admin-ai-topbar">
+              <div class="admin-ai-model-label">
+                <span class="live-dot god-dot" id="admin-ai-status-dot"></span>
+                <select id="admin-ai-model" class="model-select" aria-label="Model"></select>
+                <button id="admin-ai-model-gear" class="tool-btn" type="button" title="Model settings" aria-label="Model settings"><span class="i" data-icon="settings"></span></button>
+              </div>
+              <div class="admin-ai-tools">
+                <span id="admin-ai-model-status" class="model-status">Ready</span>
+                <button id="admin-ai-attach" class="tool-btn" type="button" title="Attach a document" aria-label="Attach a document"><span class="i" data-icon="paperclip"></span><span class="tool-label">Attach</span></button>
+                <input id="admin-ai-file-input" type="file" accept=".pdf,.docx,.txt,.md,.csv,.json,.xlsx" multiple hidden>
+                <button id="admin-ai-web" class="tool-btn" type="button" title="Search the web" aria-pressed="false"><span class="i" data-icon="globe"></span><span class="tool-label">Web</span></button>
+                <button id="admin-ai-image" class="tool-btn" type="button" title="Generate an image" aria-pressed="false"><span class="i" data-icon="image"></span><span class="tool-label">Image</span></button>
+                <select id="admin-ai-aspect" class="aspect-select hidden" aria-label="Image shape">
+                  <option value="1:1">Square</option>
+                  <option value="16:9">Landscape</option>
+                  <option value="9:16">Portrait</option>
+                </select>
+              </div>
+            </header>
+            <div id="admin-ai-empty" class="admin-empty">
+              <img src="{{ url_for('static', filename='img/logo-mark.png') }}" alt="" width="54" height="54">
+              <h2>Admin AI workspace</h2>
+              <p>Your private administrator chat — pick any Nemotron model, adjust temperature and output, attach files, search the web and generate images.</p>
+              <button id="admin-ai-start" class="primary-btn compact" type="button">Start chatting</button>
+            </div>
+            <div id="admin-ai-messages" class="messages admin-messages"></div>
+
+            <!-- Archive / trash panels -->
+            <div id="admin-ai-panel" class="admin-ai-panel hidden" aria-live="polite">
+              <div class="admin-ai-panel-head">
+                <button id="admin-ai-panel-back" class="icon-btn" type="button" aria-label="Back to chats"><span class="i" data-icon="arrow-left"></span></button>
+                <div class="admin-ai-panel-title">
+                  <h2 id="admin-ai-panel-title">Archived chats</h2>
+                  <p id="admin-ai-panel-subtitle">Restoring a chat returns it to the active list with its history intact.</p>
+                </div>
+                <div class="admin-ai-panel-actions" id="admin-ai-bulk-actions">
+                  <label class="check-field"><input id="admin-ai-select-all" type="checkbox"> Select all</label>
+                  <button id="admin-ai-bulk-restore" class="secondary-btn compact" type="button">Restore selected</button>
+                  <button id="admin-ai-bulk-purge" class="danger-btn compact" type="button">Delete selected forever</button>
+                </div>
+              </div>
+              <div id="admin-ai-panel-list" class="admin-ai-panel-list"></div>
+            </div>
+
+            <div id="admin-ai-attachment-tray" class="attachment-tray hidden" aria-live="polite"></div>
+            <form id="admin-chat-form" class="composer admin-composer">
+              <textarea id="admin-message-input" rows="1" placeholder="Message Nexora in God mode…" autocomplete="off"></textarea>
+              <div class="composer-bottom">
+                <div class="composer-buttons">
+                  <button id="admin-stop" class="send-btn stop-btn hidden" type="button"><span class="i" data-icon="stop"></span></button>
+                  <button id="admin-send" class="send-btn" type="submit"><span class="i" data-icon="arrow-up"></span></button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Admin model settings -->
+  <div id="admin-ai-model-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="admin-ai-model-title">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div><h2 id="admin-ai-model-title">Model settings</h2><p>Saved for the administrator and applied to every new message.</p></div>
+        <button class="icon-btn" type="button" data-close-modal="admin-ai-model-modal" aria-label="Close"><span class="i" data-icon="x"></span></button>
+      </div>
+      <form id="admin-ai-prefs-form" class="settings-form">
+        <label class="field"><span>Model <em>· NVIDIA provider</em></span>
+          <select id="prefs-model" aria-label="Model"></select>
+        </label>
+        <div class="ad-form-row">
+          <label class="field"><span>Temperature <em>· 0 – 2</em></span><input id="prefs-temperature" type="number" min="0" max="2" step="0.1" value="0.7"></label>
+          <label class="field"><span>Max output tokens <em>· 256 – 32768</em></span><input id="prefs-max-tokens" type="number" min="256" max="32768" step="64" value="32768"></label>
+        </div>
+        <label class="check-field"><input id="prefs-think" type="checkbox"> Reasoning / Think mode <em>· where the model supports it</em></label>
+        <div class="model-status-row"><span class="live-dot god-dot"></span><span id="prefs-model-status">Model ready</span></div>
+        <button class="primary-btn" type="submit">Save model settings</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Admin profile -->
+  <div id="admin-profile-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="admin-profile-title">
+    <div class="modal-card admin-profile-card">
+      <div class="modal-head">
+        <div><h2 id="admin-profile-title">My profile</h2><p>Administrator account details and security.</p></div>
+        <button class="icon-btn" type="button" data-close-modal="admin-profile-modal" aria-label="Close"><span class="i" data-icon="x"></span></button>
+      </div>
+      <div class="profile-tabs">
+        <button type="button" class="profile-tab active" data-profile-tab="profile">Profile</button>
+        <button type="button" class="profile-tab" data-profile-tab="security">Security</button>
+      </div>
+      <div id="profile-tab-profile" class="profile-tab-panel">
+        <div class="profile-avatar-row">
+          <span id="profile-avatar-preview" class="avatar avatar-user profile-avatar-big">A</span>
+          <div class="profile-avatar-actions">
+            <label class="secondary-btn compact avatar-upload-label">Change picture
+              <input id="profile-avatar-input" type="file" accept="image/png,image/jpeg,image/webp" hidden>
+            </label>
+            <small>PNG, JPG or WebP · up to 6 MB.</small>
+          </div>
+        </div>
+        <form id="admin-profile-form" class="settings-form">
+          <label class="field"><span>Display name</span><input id="profile-display-name" type="text" maxlength="60" required></label>
+          <label class="field"><span>Username</span><input id="profile-username" type="text" value="admin" disabled></label>
+          <label class="field"><span>Email <em>· optional</em></span><input id="profile-email" type="email" maxlength="200" placeholder="admin@techorigin.online"></label>
+          <div class="profile-meta" id="profile-meta"></div>
+          <div class="profile-role">
+            <b>Role: Administrator</b>
+            <ul id="profile-permissions"></ul>
+          </div>
+          <button class="primary-btn" type="submit">Save profile</button>
+        </form>
+      </div>
+      <div id="profile-tab-security" class="profile-tab-panel hidden">
+        <form id="admin-password-form" class="settings-form">
+          <label class="field"><span>Current password</span><input id="profile-current-password" type="password" autocomplete="current-password" required></label>
+          <label class="field"><span>New password <em>· at least 8 characters</em></span><input id="profile-new-password" type="password" autocomplete="new-password" minlength="8" required></label>
+          <label class="field"><span>Confirm new password</span><input id="profile-confirm-password" type="password" autocomplete="new-password" minlength="8" required></label>
+          <button class="primary-btn" type="submit">Change password</button>
+        </form>
+        <div class="security-divider"></div>
+        <div class="security-block">
+          <b>Sessions</b>
+          <p>Sign out of every other administrator session. This device stays signed in.</p>
+          <button id="profile-signout-others" class="secondary-btn" type="button">Sign out other sessions</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Conversation detail -->
+  <div id="admin-detail-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="admin-detail-title">
+    <div class="modal-card admin-detail-card">
+      <div class="modal-head">
+        <div>
+          <h2 id="admin-detail-title">Conversation</h2>
+          <p id="admin-detail-meta"></p>
+        </div>
+        <button class="icon-btn" type="button" data-close-modal="admin-detail-modal" aria-label="Close"><span class="i" data-icon="x"></span></button>
+      </div>
+      <div class="admin-detail-actions">
+        <button id="admin-detail-restore" class="secondary-btn compact hidden" type="button">Restore chat</button>
+        <button id="admin-detail-delete" class="danger-btn compact" type="button">Delete forever</button>
+      </div>
+      <div id="admin-detail-messages" class="admin-detail-messages"></div>
+    </div>
+  </div>
+
+  <!-- Admin ad editor -->
+  <div id="admin-ad-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="admin-ad-title">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div><h2 id="admin-ad-title">New advertisement</h2><p>Shown at the end of chats across Nexora.</p></div>
+        <button class="icon-btn" type="button" data-close-modal="admin-ad-modal" aria-label="Close"><span class="i" data-icon="x"></span></button>
+      </div>
+      <form id="admin-ad-form" class="settings-form">
+        <input id="ad-id" type="hidden">
+        <label class="field"><span>Title</span><input id="ad-title" type="text" maxlength="80" required placeholder="TechOrigin Timetable Generator"></label>
+        <label class="field"><span>Description</span><input id="ad-description" type="text" maxlength="200" placeholder="Build clean timetables in seconds."></label>
+        <label class="field"><span>Link</span><input id="ad-url" type="url" maxlength="500" required placeholder="https://tt.techorigin.online"></label>
+        <div class="ad-form-row">
+          <label class="field"><span>Order</span><input id="ad-order" type="number" min="0" max="999" value="0"></label>
+          <label class="check-field ad-active"><input id="ad-active" type="checkbox" checked> Visible</label>
+        </div>
+        <label class="field"><span>Picture <em>· optional, PNG/JPG, max 6 MB</em></span><input id="ad-image" type="file" accept="image/png,image/jpeg,image/webp"></label>
+        <div id="ad-image-preview" class="ad-image-preview hidden"></div>
+        <label class="check-field"><input id="ad-remove-image" type="checkbox"> Remove current picture</label>
+        <div class="ad-form-actions">
+          <button id="ad-delete" class="danger-btn hidden" type="button">Delete</button>
+          <button class="primary-btn" type="submit">Save advertisement</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Admin settings -->
+  <div id="admin-settings-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="admin-settings-title">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div><h2 id="admin-settings-title">Settings &amp; credits</h2><p>About this workspace.</p></div>
+        <button class="icon-btn" type="button" data-close-modal="admin-settings-modal" aria-label="Close"><span class="i" data-icon="x"></span></button>
+      </div>
+      <div class="dev-card">
+        <img src="{{ url_for('static', filename='img/logo-mark.png') }}" alt="Nexora AI" width="64" height="64">
+        <div><h3>Nexora AI · Admin</h3><p class="settings-copy">Full oversight of user conversations, including deleted chats.</p></div>
+      </div>
+      <div class="dev-links">
+        <a href="https://techorigin.online" target="_blank" rel="noopener"><b>techorigin.online</b><span>Product &amp; engineering</span></a>
+        <a href="https://kamleshvar.online" target="_blank" rel="noopener"><b>kamleshvar.online</b><span>Kamleshvar · Admin &amp; Developer</span></a>
+      </div>
+      <label class="check-field admin-setting-row"><input id="signups-enabled" type="checkbox" checked> Allow new user registrations</label>
+      <div class="setting-note">Advertisements can be switched on or off globally from the Advertisements page. Credits are a rolling 6-hour window per user; change individual limits in Users.</div>
+      <button class="secondary-btn" type="button" data-open-guidelines>Read community guidelines</button>
+    </div>
+  </div>
+
+  {% include "_guidelines.html" %}
+
+  <div id="confirm-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+    <div class="modal-card confirm-card">
+      <h2 id="confirm-title">Are you sure?</h2>
+      <p id="confirm-text"></p>
+      <div class="confirm-actions">
+        <button id="confirm-cancel" class="secondary-btn" type="button">Cancel</button>
+        <button id="confirm-ok" class="danger-btn" type="button">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+  <script>
+    window.NEXORA = {
+      models: {{ models|tojson }},
+      defaultModel: {{ default_model|tojson }},
+      guidelinesVersion: {{ guidelines_version|tojson }}
+    };
+  </script>
+  <script src="{{ url_for('static', filename='js/common.js') }}?v=33"></script>
+  <script src="{{ url_for('static', filename='js/admin.js') }}?v=33"></script>
+</body>
+</html>
